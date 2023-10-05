@@ -1,0 +1,556 @@
+{
+	"info": {
+		"_postman_id": "7ef04888-b538-44c1-8e8d-3ec2861de82f",
+		"name": "Swapi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7983202"
+	},
+	"item": [
+		{
+			"name": "People",
+			"item": [
+				{
+					"name": "Get a list of people",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test('compare first person', ()=>{\r",
+									"    const conditionEquality = utils.compareObject(pm.variables.get('expectedPerson'), jsonData.results[0]);\r",
+									"    pm.expect(conditionEquality).to.be.true;\r",
+									"})\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"the number is more than 1\", ()=>{\r",
+									"    const conditionLength = jsonData.results.length>1?true:false;\r",
+									"    pm.expect(conditionLength).to.be.true;\r",
+									"})\r",
+									"pm.test(\"response time is less than 500\", function () {\r",
+									"    \r",
+									"    pm.expect(response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"pm.test('Response schema validation', ()=>{\r",
+									"    response.to.have.jsonSchema(pm.variables.get('expectedSchemaPeople'));\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}people/",
+							"host": [
+								"{{baseUrl}}people"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get person",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test('The person by id is equal to the expected', ()=>{\r",
+									"    const equalityCondition = utils.compareObject(pm.variables.get(\"expectedPerson\"), jsonData)\r",
+									"    pm.expect(equalityCondition).to.be.true;\r",
+									"\r",
+									"})\r",
+									"pm.test(\"Validation of the scheme for person\", ()=>{\r",
+									"    response.to.have.jsonSchema(pm.variables.get('expectedSchemaPerson'));\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}people/{{personId}}/",
+							"host": [
+								"{{baseUrl}}people"
+							],
+							"path": [
+								"{{personId}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"const expectedPersonJson = {",
+							"            \"name\": \"Luke Skywalker\",",
+							"            \"height\": \"172\",",
+							"            \"mass\": \"77\",",
+							"            \"hair_color\": \"blond\",",
+							"            \"skin_color\": \"fair\",",
+							"            \"eye_color\": \"blue\",",
+							"            \"birth_year\": \"19BBY\",",
+							"            \"gender\": \"male\",",
+							"            \"homeworld\": \"https://swapi.dev/api/planets/1/\",",
+							"            \"films\": [",
+							"                \"https://swapi.dev/api/films/1/\",",
+							"                \"https://swapi.dev/api/films/2/\",",
+							"                \"https://swapi.dev/api/films/3/\",",
+							"                \"https://swapi.dev/api/films/6/\"",
+							"            ],",
+							"            \"species\": [],",
+							"            \"vehicles\": [",
+							"                \"https://swapi.dev/api/vehicles/14/\",",
+							"                \"https://swapi.dev/api/vehicles/30/\"",
+							"            ],",
+							"            \"starships\": [",
+							"                \"https://swapi.dev/api/starships/12/\",",
+							"                \"https://swapi.dev/api/starships/22/\"",
+							"            ],",
+							"            \"created\": \"2014-12-09T13:50:51.644000Z\",",
+							"            \"edited\": \"2014-12-20T21:17:56.891000Z\",",
+							"            \"url\": \"https://swapi.dev/api/people/1/\"",
+							"}",
+							"pm.variables.set(\"expectedPerson\", expectedPersonJson);",
+							"",
+							"const personSchema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"name\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"height\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"mass\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"hair_color\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"skin_color\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"eye_color\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"birth_year\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"gender\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"homeworld\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"films\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": [",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        }",
+							"      ]",
+							"    },",
+							"    \"species\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": {}",
+							"    },",
+							"    \"vehicles\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": [",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        }",
+							"      ]",
+							"    },",
+							"    \"starships\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": [",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        }",
+							"      ]",
+							"    },",
+							"    \"created\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"edited\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"url\": {",
+							"      \"type\": \"string\"",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"name\",",
+							"    \"height\",",
+							"    \"mass\",",
+							"    \"hair_color\",",
+							"    \"skin_color\",",
+							"    \"eye_color\",",
+							"    \"birth_year\",",
+							"    \"gender\",",
+							"    \"homeworld\",",
+							"    \"films\",",
+							"    \"species\",",
+							"    \"vehicles\",",
+							"    \"starships\",",
+							"    \"created\",",
+							"    \"edited\",",
+							"    \"url\"",
+							"  ]",
+							"}",
+							"",
+							"pm.variables.set('expectedSchemaPerson', personSchema);",
+							"const schemaPersonListJson = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"count\": {",
+							"        \"type\": \"integer\"",
+							"        },",
+							"        \"next\": {",
+							"        \"type\": \"string\"",
+							"        },",
+							"        \"previous\": {",
+							"        \"type\": \"null\"",
+							"        },",
+							"        \"results\": {",
+							"        \"type\": \"array\",",
+							"        \"items\": [",
+							"            {",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"name\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"height\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"mass\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"hair_color\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"skin_color\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"eye_color\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"birth_year\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"gender\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"homeworld\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"films\": {",
+							"                \"type\": \"array\",",
+							"                \"items\": [",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    },",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    },",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    },",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    }",
+							"                ]",
+							"                },",
+							"                \"species\": {",
+							"                \"type\": \"array\",",
+							"                \"items\": {}",
+							"                },",
+							"                \"vehicles\": {",
+							"                \"type\": \"array\",",
+							"                \"items\": [",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    },",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    }",
+							"                ]",
+							"                },",
+							"                \"starships\": {",
+							"                \"type\": \"array\",",
+							"                \"items\": [",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    },",
+							"                    {",
+							"                    \"type\": \"string\"",
+							"                    }",
+							"                ]",
+							"                },",
+							"                \"created\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"edited\": {",
+							"                \"type\": \"string\"",
+							"                },",
+							"                \"url\": {",
+							"                \"type\": \"string\"",
+							"                }",
+							"            },",
+							"            \"required\": [",
+							"                \"name\",",
+							"                \"height\",",
+							"                \"mass\",",
+							"                \"hair_color\",",
+							"                \"skin_color\",",
+							"                \"eye_color\",",
+							"                \"birth_year\",",
+							"                \"gender\",",
+							"                \"homeworld\",",
+							"                \"films\",",
+							"                \"species\",",
+							"                \"vehicles\",",
+							"                \"starships\",",
+							"                \"created\",",
+							"                \"edited\",",
+							"                \"url\"",
+							"            ]",
+							"            }",
+							"        ]",
+							"        }",
+							"    },",
+							"    \"required\": [",
+							"        \"count\",",
+							"        \"next\",",
+							"        \"previous\",",
+							"        \"results\"",
+							"    ]",
+							"}",
+							"pm.variables.set('expectedSchemaPeople', schemaPersonListJson);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "GeneralQueries",
+			"item": [
+				{
+					"name": "Get a list of urls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response;\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Validation of the scheme\", ()=>{\r",
+									"    \r",
+									"    response.to.have.jsonSchema(pm.variables.get('expectedSchemaUrls'));\r",
+									"})\r",
+									"pm.test('The answer is equal to the expected value', ()=>{\r",
+									"    const condition = utils.compareObject(pm.variables.get('expectedListUrls'), jsonData);\r",
+									"    pm.expect(condition).to.be.true;\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"const expectedUrlListJson = {",
+							"    \"people\": \"https://swapi.dev/api/people/\",",
+							"    \"planets\": \"https://swapi.dev/api/planets/\",",
+							"    \"films\": \"https://swapi.dev/api/films/\",",
+							"    \"species\": \"https://swapi.dev/api/species/\",",
+							"    \"vehicles\": \"https://swapi.dev/api/vehicles/\",",
+							"    \"starships\": \"https://swapi.dev/api/starships/\"",
+							"};",
+							"pm.variables.set(\"expectedListUrls\", expectedUrlListJson);",
+							"const schemaUrlList = {",
+							"        \"type\": \"object\", ",
+							"        \"properties\": {",
+							"            \"people\": {",
+							"                \"type\": \"string\"",
+							"            }, ",
+							"            \"planets\": {",
+							"                \"type\": \"string\"",
+							"            }, ",
+							"            \"films\": {",
+							"                \"type\": \"string\"",
+							"            },",
+							"            \"species\": {",
+							"                \"type\": \"string\"",
+							"            },",
+							"            \"vehicles\": {",
+							"                \"type\": \"string\"",
+							"            },",
+							"            \"starships\": {",
+							"                \"type\": \"string\"",
+							"            }",
+							"        },",
+							"        \"required\": [",
+							"            \"people\",",
+							"            \"planets\",",
+							"            \"films\",",
+							"            \"species\",",
+							"            \"vehicles\",",
+							"            \"starships\"",
+							"        ]",
+							"}",
+							"pm.variables.set(\"expectedSchemaUrls\", schemaUrlList);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"utils = {",
+					"    compareObject: (expected, actual)=>{",
+					"        const expectedValue = JSON.stringify(expected);",
+					"        const actualValue = JSON.stringify(actual);",
+					"        return expectedValue === actualValue;",
+					"    }",
+					"}",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://swapi.dev/api/",
+			"type": "string"
+		},
+		{
+			"key": "expectedPerson",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "expectedSchemaPerson",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "expectedListUrls",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "expectedSchemaUrls",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "expectedSchemaPeople",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "personId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
